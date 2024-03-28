@@ -1,0 +1,35 @@
+from collections import defaultdict
+
+def canFinish(numCourses, prerequisites):
+    # Create a graph representation
+    graph = defaultdict(list)
+    indegree = [0] * numCourses
+    for course, prereq in prerequisites:
+        graph[course].append(prereq)
+        indegree[prereq] += 1
+
+   
+    visited = [False] * numCourses
+    stack = [False] * numCourses
+
+    for node in range(numCourses):
+        if indegree[node] == 0 and not dfs(graph, node, visited, stack):
+            return False
+
+    return True
+
+def dfs(graph, node, visited, stack):
+    visited[node] = True
+    stack[node] = True
+
+    for neighbor in graph[node]:
+        if not visited[neighbor]:
+            if not dfs(graph, neighbor, visited, stack):
+                return False
+        elif stack[neighbor]:
+            return False
+
+    stack[node] = False
+    return True
+
+print(canFinish(2, [[1,0],[0,1]]))
